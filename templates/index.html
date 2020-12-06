@@ -1,0 +1,98 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Home
+{% endblock %}
+
+{% block main %}
+    
+    <!--SCHEDULE TABLE-->
+    <h2><i>Weekly Schedule</i></h2>
+    <table class = "table table-striped mb-5">
+        <thead>
+            <tr>
+                <th>DAY</th>
+                <th>TIME</th>
+                <th>TITLE</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for schedule in schedules %}
+                <tr>
+                    <td>{{ schedule["day"] }}</td>
+                    <td>{{ schedule["formatted_start"] }} - {{ schedule["formatted_end"] }}</td>
+                    <td>{{ schedule["title"] }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    
+    
+    <!--SPECIAL EVENTS TABLE-->
+    <h2><i>Special Events</i></h2>
+    <table class = "table table-striped mb-5">
+        <thead>
+            <tr>
+                <th>DATE</th>
+                <th>TITLE</th>
+                <th>DAYS LEFT</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for event in events %}
+                <tr>
+                    <td>{{ event["date"] }}</td>
+                    <td>{{ event["title"] }}</td>
+                    <td>{{ event["difference"] }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    
+    
+    <!--TODO LIST TABLE-->
+    <h2><i>To Do List</i></h2>
+    <table class = "table table-striped mb-5">
+        <thead>
+            <tr>
+                <th>DATE</th>
+                <th>TASK</th>
+                <th>DAYS LEFT</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for todo in todos %}
+                <tr>
+                    <td>{{ todo["date"] }}</td>
+                    <td>{{ todo["task"] }}</td>
+                    <td>{{ todo["difference"] }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    
+    
+    <script>
+
+        // Example starter JavaScript for disabling form submissions if there are invalid fields
+        (function() {
+          'use strict';
+          window.addEventListener('load', function() {
+            // Fetch all the forms we want to apply custom Bootstrap validation styles to
+            var forms = document.getElementsByClassName('needs-validation');
+            // Loop over them and prevent submission
+            var validation = Array.prototype.filter.call(forms, function(form) {
+              form.addEventListener('submit', function(event) {
+                if (form.checkValidity() === false) {
+                  event.preventDefault();
+                  event.stopPropagation();
+                }
+                form.classList.add('was-validated');
+              }, false);
+            });
+          }, false);
+        })();
+        
+    </script>
+    
+{% endblock %}

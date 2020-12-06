@@ -1,0 +1,158 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Todo
+{% endblock %}
+
+{% block main %}
+
+    <h1 class="mb-4">To-Do List</h1>
+    <!--ADD TASK BUTTON-->
+    <button type="button" class="btn btn-secondary mb-3" data-toggle="modal" data-target="#addTask">Add Task</button>
+
+    <!--MODAL-->
+    <div class="modal fade" id="addTask" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title w-100 text-center" id="exampleModalLabel">Add Task</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          
+          <div class="modal-body w-100">
+            <form class="needs-validation" novalidate action="/todo" method="POST">
+                <input type="hidden" name="add" value="add">
+              <div class="form-group">
+                <input autocomplete="off" autofocus class="form-control w-100" name="task" placeholder="Task" type="text" required>
+                <div class="valid-feedback">Looks good!</div>
+                <div class="invalid-feedback">Please insert title of task.</div>
+              </div>
+              <div class="form-group">
+                <label for="date">Due Date</label>
+                <input autocomplete="off" autofocus class="form-control w-100" name="date" id="date" type="date" required>
+                <div class="valid-feedback">Looks good!</div>
+                <div class="invalid-feedback">Please select a date.</div>
+              </div>
+
+            <div class="modal-footer">
+              <button class="btn btn-secondary w-100 text-center" type="submit">Add Task</button>
+            </div>
+            </form>
+            
+        </div>
+      </div>
+    </div>
+    </div>
+    
+    <!--DELETE ALL BUTTON-->
+    <form action="/deleteall" method="post" onsubmit="delAllTodos();">
+      <input type="hidden" name="todo" value="todo">
+      <button type="submit" class="btn btn-info mb-4">Delete All</button>
+    </form>
+    
+    <!--TODO LIST TABLE-->
+    <table class = "table table-striped mb-5">
+        <thead>
+            <tr>
+                <th>DATE</th>
+                <th>TASK</th>
+                <th>DAYS LEFT</th>
+                <th>COMPLETE</th>
+                <th>DELETE</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for todo in todos %}
+                <tr>
+                    <td>{{ todo["date"] }}</td>
+                    <td>{{ todo["task"] }}</td>
+                    <td>{{ todo["difference"] }}</td>
+                    
+                    <!--COMPLETE BUTTON FOR EACH ROW-->
+                    <td>
+                      <form action="/todo" method="post">
+                        <!--FOR UPDATING DATA IN BACKEND-->
+                        <input type="hidden" name="complete" value="complete">
+                        <input type="hidden" name="date" value="{{ todo["date"] }}">
+                        <input type="hidden" name="task" value="{{ todo["task"] }}">
+                        
+                        <button type="submit" class="btn btn-secondary">Complete</button>
+                      </form>
+                    </td>
+                    
+                    <!--DELETE BUTTON FOR EACH ROW-->
+                    <td>
+                      <form action="/delete" method="post" onsubmit="delRowTodo();">
+                        <!--FOR UPDATING DATA IN BACKEND-->
+                        <input type="hidden" name="todo" value="todo">
+                        <input type="hidden" name="date" value="{{ todo["date"] }}">
+                        <input type="hidden" name="task" value="{{ todo["task"] }}">
+                        
+                        <button type="submit" class="btn btn-info">Delete</button>
+                      </form>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    
+    
+    <!--COMPLETED TODO TABLE-->
+    <h2 class="mb-4">Completed To-Do List</h2>
+    <table class = "table table-striped">
+        <thead>
+            <tr>
+                <th>DUE DATE</th>
+                <th>TASK</th>
+                <th>DELETE</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for complete in completes %}
+                <tr>
+                    <td>{{ complete["date"] }}</td>
+                    <td>{{ complete["task"] }}</td>
+                    
+                    <!--DELETE BUTTON FOR EACH ROW-->
+                    <td>
+                      <form action="/delete" method="post" onsubmit="delRowTodo();">
+                        <!--FOR UPDATING DATA IN BACKEND-->
+                        <input type="hidden" name="todo" value="todo">
+                        <input type="hidden" name="date" value="{{ complete["date"] }}">
+                        <input type="hidden" name="task" value="{{ complete["task"] }}">
+                        
+                        <button type="submit" class="btn btn-info">Delete</button>
+                      </form>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    
+    
+    <script>
+
+        // Example starter JavaScript for disabling form submissions if there are invalid fields
+        (function() {
+          'use strict';
+          window.addEventListener('load', function() {
+            // Fetch all the forms we want to apply custom Bootstrap validation styles to
+            var forms = document.getElementsByClassName('needs-validation');
+            // Loop over them and prevent submission
+            var validation = Array.prototype.filter.call(forms, function(form) {
+              form.addEventListener('submit', function(event) {
+                if (form.checkValidity() === false) {
+                  event.preventDefault();
+                  event.stopPropagation();
+                }
+                form.classList.add('was-validated');
+              }, false);
+            });
+          }, false);
+        })();
+        
+    </script>
+    
+{% endblock %}

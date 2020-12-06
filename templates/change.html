@@ -1,0 +1,44 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Change Password
+{% endblock %}
+
+{% block main %}
+    <form class="needs-validation" novalidate action="/change" method="post">
+        <div class="form-group">
+            <input autocomplete="off" autofocus class="form-control" name="username" value="{{ username }}" type="text" disabled>
+        </div>
+        <div class="form-group">
+            <input class="form-control" name="password" placeholder="Current Password" type="password" required>
+        </div>
+        <div class="form-group">
+            <input class="form-control" name="newpass" placeholder="New Password" type="password" required>
+        </div>
+        <div class="form-group">
+            <input class="form-control" name="confirmation" placeholder="New Password (again)" type="password" required>
+        </div>
+        <button class="btn btn-secondary" type="submit">Change</button>
+    </form>
+    
+    <script>
+        // Example starter JavaScript for disabling form submissions if there are invalid fields
+        (function() {
+          'use strict';
+          window.addEventListener('load', function() {
+            // Fetch all the forms we want to apply custom Bootstrap validation styles to
+            var forms = document.getElementsByClassName('needs-validation');
+            // Loop over them and prevent submission
+            var validation = Array.prototype.filter.call(forms, function(form) {
+              form.addEventListener('submit', function(event) {
+                if (form.checkValidity() === false) {
+                  event.preventDefault();
+                  event.stopPropagation();
+                }
+                form.classList.add('was-validated');
+              }, false);
+            });
+          }, false);
+        })();
+    </script>
+{% endblock %}

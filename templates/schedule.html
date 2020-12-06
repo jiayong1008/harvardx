@@ -1,0 +1,214 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Schedule
+{% endblock %}
+
+{% block main %}
+
+    <h1 class="mb-4">Weekly Schedule</h1>
+    <!--ADD SCHEDULE BUTTON-->
+    <button type="button" class="btn btn-secondary mb-3" data-toggle="modal" data-target="#addSchedule">Add Schedule</button>
+
+    <!--MODAL-->
+    <div class="modal fade" id="addSchedule" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title w-100 text-center" id="exampleModalLabel">Add Schedule</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          
+          <div class="modal-body w-100">
+            <form class="needs-validation" novalidate action="/schedule" method="POST" onsubmit="checkTime(); checkBox();">
+              <div class="form-group">
+                <input autocomplete="off" autofocus class="form-control w-100" name="title" placeholder="Title" type="text" required>
+                <div class="valid-feedback">Looks good!</div>
+                <div class="invalid-feedback">Please insert title of schedule.</div>
+              </div>
+              <div class="form-group">
+                <label for="start">Start Time</label>
+                <input autocomplete="off" autofocus class="form-control w-100" name="start" id="start" placeholder="Start Time" type="time" required>
+                <div class="valid-feedback">Looks good!</div>
+                <div class="invalid-feedback">Please choose a start time.</div>
+              </div>
+              <div class="form-group">
+                <label for="end">End Time</label>
+                <input autocomplete="off" autofocus class="form-control w-100" name="end" id="end" placeholder="End Time" type="time" required>
+                <div class="valid-feedback">Looks good!</div>
+                <div class="invalid-feedback">Please choose a end time.</div>
+              </div>
+              
+              <div class="text-left checkboxes">
+                  <div class="form-group form-check">
+                    <input type="checkbox" name="day" class="form-check-input" value="Sunday" id="exampleCheck1">
+                    <label class="form-check-label" for="exampleCheck1">Sunday</label>
+                  </div>
+                  <div class="form-group form-check">
+                    <input type="checkbox" name="day" class="form-check-input" value="Monday" id="exampleCheck2">
+                    <label class="form-check-label" for="exampleCheck2">Monday</label>
+                  </div>
+                  <div class="form-group form-check">
+                    <input type="checkbox" name="day" class="form-check-input" value="Tuesday" id="exampleCheck3">
+                    <label class="form-check-label" for="exampleCheck3">Tuesday</label>
+                  </div>
+                  <div class="form-group form-check">
+                    <input type="checkbox" name="day" class="form-check-input" value="Wednesday" id="exampleCheck4">
+                    <label class="form-check-label" for="exampleCheck4">Wednesday</label>
+                  </div>
+                  <div class="form-group form-check">
+                    <input type="checkbox" name="day" class="form-check-input" value="Thursday" id="exampleCheck5">
+                    <label class="form-check-label" for="exampleCheck5">Thursday</label>
+                  </div>
+                  <div class="form-group form-check">
+                    <input type="checkbox" name="day" class="form-check-input" value="Friday" id="exampleCheck6">
+                    <label class="form-check-label" for="exampleCheck6">Friday</label>
+                  </div>
+                  <div class="form-group form-check">
+                    <input type="checkbox" name="day" class="form-check-input" value="Saturday" id="exampleCheck7">
+                    <label class="form-check-label" for="exampleCheck7">Saturday</label>
+                  </div>
+              </div>
+          </div>
+          
+            <div class="modal-footer">
+              <button class="btn btn-secondary w-100 text-center" type="submit">Add Schedule</button>
+            </div>
+            </form>
+            
+        </div>
+      </div>
+    </div>
+    
+    <!--DELETE ALL BUTTON-->
+    <form action="/deleteall" method="post" onsubmit="delAllSchedule();">
+      <input type="hidden" name="schedule" value="schedule">
+      <button type="submit" class="btn btn-info mb-4">Delete All</button>
+    </form>
+    
+    <!--TABLE TO EDIT AND DELETE-->
+    <table class = "table table-striped">
+        <thead>
+            <tr>
+                <th>DAY</th>
+                <th>TIME</th>
+                <th>TITLE</th>
+                <th>EDIT</th>
+                <th>DELETE</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for schedule in schedules %}
+                <tr>
+                    <td>{{ schedule["day"] }}</td>
+                    <td>{{ schedule["formatted_start"] }} - {{ schedule["formatted_end"] }}</td>
+                    <td>{{ schedule["title"] }}</td>
+                    
+                    <!--EDIT BUTTON FOR EACH ROW-->
+                    <td>
+                       <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#edit{{ schedule["index"] }}">Edit</button>
+
+                        <!--MODAL-->
+                        <div class="modal fade" id="edit{{ schedule["index"] }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                          <div class="modal-dialog">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <h5 class="modal-title w-100 text-center" id="exampleModalLabel">Edit Schedule</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                  <span aria-hidden="true">&times;</span>
+                                </button>
+                              </div>
+                              
+                              <div class="modal-body w-100">
+                                <form class="needs-validation" novalidate action="/edit" method="POST" onsubmit="editTime({{ schedule["index"] }});">
+                                  
+                                  <!--FOR UPDATING DATA IN BACKEND-->
+                                  <input type="hidden" name="day" value="{{ schedule["day"] }}">
+                                  <input type="hidden" name="start" value="{{ schedule["start"] }}">
+                                  <input type="hidden" name="end" value="{{ schedule["end"] }}">
+                                  <input type="hidden" name="title" value="{{ schedule["title"] }}">
+                                  
+                                  <div class="form-group">
+                                    <input autocomplete="off" autofocus class="form-control w-100" name="newtitle" placeholder="Title" type="text" value="{{ schedule["title"] }}" required>
+                                    <div class="valid-feedback">Looks good!</div>
+                                    <div class="invalid-feedback">Please insert title of schedule.</div>
+                                  </div>
+                                  <div class="form-group">
+                                    <label for="start">Start Time</label>
+                                    <input autocomplete="off" autofocus class="form-control w-100" name="newstart" id="start{{ schedule["index"] }}" placeholder="Start Time" type="time" required>
+                                    <div class="valid-feedback">Looks good!</div>
+                                    <div class="invalid-feedback">Please choose a start time.</div>
+                                  </div>
+                                  <div class="form-group">
+                                    <label for="end">End Time</label>
+                                    <input autocomplete="off" autofocus class="form-control w-100" name="newend" id="end{{ schedule["index"] }}" placeholder="End Time" type="time" required>
+                                    <div class="valid-feedback">Looks good!</div>
+                                    <div class="invalid-feedback">Please choose a end time.</div>
+                                  </div>
+                              </div>
+                              
+                              <div class="modal-footer">
+                                <button class="btn btn-secondary w-100 text-center" type="submit">Edit Schedule</button>
+                              </div>
+                              </form>
+                              
+                            </div>
+                          </div>
+                        </div>
+                    </td>
+                    
+                    <!--DELETE BUTTON FOR EACH ROW-->
+                    <td>
+                      <form action="/delete" method="post" onsubmit="delRowSchedule();">
+                        <!--FOR UPDATING DATA IN BACKEND-->
+                        <input type="hidden" name="schedule" value="schedule">
+                        <input type="hidden" name="day" value="{{ schedule["day"] }}">
+                        <input type="hidden" name="start" value="{{ schedule["start"] }}">
+                        <input type="hidden" name="end" value="{{ schedule["end"] }}">
+                        <input type="hidden" name="title" value="{{ schedule["title"] }}">
+                        
+                        <button type="submit" class="btn btn-info">Delete</button>
+                      </form>
+                    </td>
+                </tr>
+            {% endfor %}
+            <!--<tr>-->
+            <!--    <td colspan="4">CASH</td>-->
+            <!--    <td>{{ cash }}</td>-->
+            <!--</tr>-->
+        </tbody>
+        <!--<tfoot>-->
+        <!--    <tr>-->
+        <!--        <td colspan="4"></td>-->
+        <!--        <td><b>{{ grand_total }}</b></td>-->
+        <!--    </tr>-->
+        <!--</tfoot>-->
+    </table>
+    
+    
+    <script>
+
+        // Example starter JavaScript for disabling form submissions if there are invalid fields
+        (function() {
+          'use strict';
+          window.addEventListener('load', function() {
+            // Fetch all the forms we want to apply custom Bootstrap validation styles to
+            var forms = document.getElementsByClassName('needs-validation');
+            // Loop over them and prevent submission
+            var validation = Array.prototype.filter.call(forms, function(form) {
+              form.addEventListener('submit', function(event) {
+                if (form.checkValidity() === false) {
+                  event.preventDefault();
+                  event.stopPropagation();
+                }
+                form.classList.add('was-validated');
+              }, false);
+            });
+          }, false);
+        })();
+        
+    </script>
+    
+{% endblock %}
