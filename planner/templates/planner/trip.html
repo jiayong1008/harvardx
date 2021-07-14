@@ -1,0 +1,185 @@
+{% extends 'planner/layout.html' %}
+{% load crispy_forms_tags %}
+{% load mathfilters %}
+
+{% block banner %}
+<div class="banner banner-partial">
+    <img src="{{ trip.country.high_image }}" alt="{{ trip.country.name }}">
+    <div class="banner-info">
+        <div class="banner-intro banner-country">
+            <h2>{{ trip.country.name }}</h2>
+            <h3>{{ trip.days }} days</h3>
+            <h3>By: @{{ trip.default_owner }}</h3>
+            <div class="buttons">
+                <a class="btn btn-secondary" href="{% url 'detail-trip' trip.id %}">View Trip</a>
+                {% if trip.default_owner == user %}
+                    {% if trip.private %}
+                    <button data-tripid="{{ trip.id }}" class="btn btn-secondary privacy">Make it Public</button>
+                    {% else %}
+                    <button data-tripid="{{ trip.id }}" class="btn btn-secondary privacy">Keep it Private</button>
+                    {% endif %}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+<div class="partial-empty-space"></div>
+{% endblock banner %}
+
+{% block body %}
+<div class="activities">
+    {% if template == 'timeline' %}
+        <!-- current page object_list is refering to TripDetails model -->
+        {% for tripDetail in currentPage.object_list %}
+        <div class="day">
+            <h3 class="center-h3">Day {{ tripDetail.day }}</h3>
+            <hr>
+            {% for place in tripDetail.destinations.all %}
+            <div class="place">
+                <p class="duration">{{ place.duration }} Hour(s)</p>
+                <p class="name">{{ place.destination }}</p>
+                {% if trip.owner == user %}
+                <button class="deleteDestinationBtn" data-tripid="{{ trip.id }}" data-tripdetailid="{{ tripDetail.id }}" data-destinationid="{{ place.destination.id }}">x</button>
+                {% else %}
+                <button disabled class="deleteDestinationBtn disabledBtn" data-tripid="{{ trip.id }}" data-tripdetailid="{{ tripDetail.id }}" data-destinationid="{{ place.destination.id }}">x</button>
+                {% endif %}
+            </div>
+            {% empty %}
+            <h4>No activites so far.</h4>
+            {% endfor %}
+        </div>
+        <div class="line-between"></div>
+        {% endfor %}
+
+        {% if trip.owner == user %}
+        <div class="buttons">
+            <div class="buttons-left">
+                <form action="{% url 'detail-trip' trip.id %}" method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="purpose" value="delete">
+                    <input id="deleteTripBtn" type="submit" class="btn btn-secondary" value="Delete Trip">
+                </form>
+            </div>
+            <div class="buttons-right">
+                <a href="{% url 'recommendation' trip.id %}" class="btn btn-secondary">Add Destination</a>
+            </div>
+        </div>
+        {% elif user.is_authenticated %}
+        <div class="buttons">
+            <div class="buttons-left">
+            </div>
+            <div class="buttons-right">
+                <form action="{% url 'detail-trip' trip.id %}" method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="purpose" value="clone">
+                    <input type="submit" class="btn btn-secondary" value="Clone Trip">
+                </form>
+            </div>
+        </div>
+        {% endif %}
+
+    {% else %} <!-- place recommendation -->
+        <!-- current page object_list is refering to place recommendations obtained from API -->
+        {% for tripDetail in currentPage.object_list %}
+        <div class="place-recommendations">
+            <img src="{{ tripDetail.image }}" alt="{{ tripDetail.name }}">
+            <div class="description">
+                <h3 class="title">{{ tripDetail.name }}</h3>
+                <p>City: {{ tripDetail.city }}</p>
+                <p>Region: {{ tripDetail.region }}</p>
+            </div>
+            <div class="add-button">
+                <!-- button which opens up a modal -->
+                <button type="button" class="btn btn-secondary add-destinationBtn" data-bs-toggle="modal" data-bs-target="#destinationModal" data-name="{{ tripDetail.name }}" data-city="{{ tripDetail.city }}" data-region="{{ tripDetail.region }}">Add</button>
+            </div>
+        </div>
+        {% endfor %}
+
+        <!-- ADD DESTINATION MODAL -->
+        <div class="modal fade" id="destinationModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                <h5 class="modal-title" id="modalTitle"></h5> <!-- title will be populated through JS -->
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="{% url 'recommendation' trip.id %}" method="POST">
+                    {% csrf_token %}
+                    <div class="modal-body">
+                        <div class="form-category" id="cheese-pizza">
+                            {{ tripDetailForm|crispy }}
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
+                        <input id="input-hidden-name" type="hidden" name="name">
+                        <input id="input-hidden-city" type="hidden" name="city">
+                        <input id="input-hidden-region" type="hidden" name="region">
+                        <input id="modal-submit" type="submit" class="btn btn-secondary" value="Add">
+                    </div>
+                </form>
+            </div>
+            </div>
+        </div>
+
+    {% endif %}
+
+    <!-- PAGINATION (logic are slightly different for 'timeline' and 'recommendations') -->
+    {% if template == 'timeline' %}
+    <!-- pagination for 'timeline' -->
+    <nav class="pagination">
+        <ul class="pagination justify-content-center mb-5">
+            {% if currentPage.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ currentPage.previous_page_number }}" aria-disabled="true">Previous</a>
+                </li>
+            {% else %}
+                <li class="page-item disabled">
+                    <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
+                </li>
+            {% endif %}
+            
+            <li class="page-item"><a class="page-link" href="?page={{ currentPage.number }}">{{ currentPage.number }}</a></li>
+
+            {% if currentPage.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ currentPage.next_page_number }}">Next</a>
+                </li>
+            {% else %}
+                <li class="page-item disabled">
+                    <a class="page-link" tabindex="-1" href="#">Next</a>
+                </li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% else %}
+    <!-- pagination for 'recommendations' -->
+    <nav class="pagination">
+        <ul class="pagination justify-content-center mb-5">
+            {% if pageNum > 1 %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ pageNum|sub:1 }}" aria-disabled="true">Previous</a>
+                </li>
+            {% else %}
+                <li class="page-item disabled">
+                    <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
+                </li>
+            {% endif %}
+            
+            <li class="page-item"><a class="page-link" href="?page={{ pageNum }}">{{ pageNum }}</a></li>
+
+            {% if currentPage.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ pageNum|add:1 }}">Next</a>
+                </li>
+            {% else %}
+                <li class="page-item disabled">
+                    <a class="page-link" tabindex="-1" href="">Next</a>
+                </li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% endif %}
+    <p class="api">Webcams provided by <a href="https://www.windy.com/" target="_blank">windy.com</a> &mdash; <a href="https://www.windy.com/webcams/add" target="_blank">add a webcam</a></p>
+</div>
+{% endblock body %}

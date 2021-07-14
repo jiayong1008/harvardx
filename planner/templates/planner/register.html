@@ -1,0 +1,36 @@
+{% extends "planner/layout.html" %}
+{% load static %}
+
+{% block banner %}
+<div class="banner banner-full">
+    <img src="{% static 'planner/nature.jpg' %}" alt="Banner">
+    <div class="banner-info">
+        <h1>Register</h1>
+
+        <form action="{% url 'register' %}" method="post">
+            {% csrf_token %}
+            
+            <div class="mb-3">
+            <input autofocus type="text" class="form-control" name="username" placeholder="Username">
+            </div>
+    
+            <div class="mb-3">
+            <input type="email" class="form-control" name="email" placeholder="Email Address">
+            </div>
+    
+            <div class="mb-3">
+            <input type="password" class="form-control" name="password" placeholder="Password">
+            </div>
+    
+            <div class="mb-3">
+            <input type="password" class="form-control" name="confirmation" placeholder="Confirm Password">
+            </div>
+    
+            <button type="submit" class="btn btn-secondary">Register</button>
+        </form>
+        
+        <p>Already have an account? <a class="login" href="{% url 'login' %}">Log In here.</a></p>
+    </div>
+</div>
+<div class="full-empty-space"></div>
+{% endblock %}

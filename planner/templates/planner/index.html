@@ -1,0 +1,124 @@
+<!-- Template for 'index' and 'trip' view -->
+{% extends 'planner/layout.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block banner %}
+{% if template == 'index' %}
+<div class="banner banner-full">
+    <img src="{% static 'planner/nature.jpg' %}" alt="Banner">
+    <div class="banner-info">
+        <div class="banner-intro">
+            Start Customizing Your Next Trip
+        </div>
+        <div class="trip-planner">
+            <h1>Trip Planner</h1>
+        
+            <form action="{% url 'index' %}" method="post">
+                {% csrf_token %}
+                {{ tripForm|crispy }}
+                <input type="submit" class="btn btn-secondary" value="Plan">
+            </form>
+        
+        </div>
+    </div>
+</div>
+<div class="full-empty-space"></div>
+{% endif %}
+{% endblock banner %}
+
+
+{% block body %}
+{% if user.is_authenticated %}
+<hr><h1 class="center-h1">My Trips</h1><hr>
+<div class="posts-wrapper">
+
+    {% if template == 'index' %}
+        {% for trip in trips %}
+            <a href="{% url 'detail-trip' trip.id %}">
+            <div class="post">
+                <img src="{{ trip.country.low_image }}" alt="{{ trip.country.name }}">
+                <div class="image-post-text">
+                    <p>{{ trip.days }} days in {{ trip.country.name }}</p>
+                </div>
+                <div class="post-text">
+                    <p>Original Author: @{{ trip.default_owner }}</p>
+                </div>
+            </div>
+            </a>
+        {% empty %}
+            <h3 class="text-center">No trips planned.</h3>
+        {% endfor %}
+    {% else %} <!-- template == 'trip' -->
+        {% for trip in currentPage.object_list %}
+            <a href="{% url 'detail-trip' trip.id %}">
+            <div class="post">
+                <img src="{{ trip.country.low_image }}" alt="{{ trip.country.name }}">
+                <div class="image-post-text">
+                    <p>{{ trip.days }} days in {{ trip.country.name }}</p>
+                </div>
+                <div class="post-text">
+                    <p>Original Author: @{{ trip.default_owner }}</p>
+                </div>
+            </div>
+            </a>
+        {% empty %}
+            <h3 class="text-center">No trips planned.</h3>
+        {% endfor %}
+    {% endif %}
+
+</div>
+{% endif %}
+
+
+{% if template == 'index' %}
+<hr><h1 class="center-h1">Trending Trips</h1><hr>
+<div class="posts-wrapper">
+
+     <!-- current page object_list is refering to 'Trip' model -->
+    {% for trip in currentPage.object_list %}
+    <a href="{% url 'detail-trip' trip.id %}">
+    <div class="post">
+        <img src="{{ trip.country.low_image }}" alt="{{ trip.country.name }}">
+        <div class="image-post-text">
+            <p>{{ trip.days }} days in {{ trip.country.name }}</p>
+        </div>
+        <div class="post-text">
+            <p>Author: @{{ trip.owner }}</p>
+        </div>
+    </div>
+    </a>
+    {% empty %}
+    <h3 class="text-center">No trending trips thus far.</h3>
+    {% endfor %}
+
+</div>
+{% endif %}
+
+<!-- PAGINATION -->
+<nav class="pagination index-pagination">
+    <ul class="pagination justify-content-center mb-5">
+        {% if currentPage.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ currentPage.previous_page_number }}" aria-disabled="true">Previous</a>
+            </li>
+        {% else %}
+            <li class="page-item disabled">
+                <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
+            </li>
+        {% endif %}
+        
+        <li class="page-item"><a class="page-link" href="?page={{ currentPage.number }}">{{ currentPage.number }}</a></li>
+
+        {% if currentPage.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ currentPage.next_page_number }}">Next</a>
+            </li>
+        {% else %}
+            <li class="page-item disabled">
+                <a class="page-link" tabindex="-1" href="#">Next</a>
+            </li>
+        {% endif %}
+    </ul>
+</nav>
+{% endblock body %}
