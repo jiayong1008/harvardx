@@ -27,7 +27,6 @@ This code consists of a Flask project which has a main app, `application.py`.
     - ```events.html``` - Special events template
     - ```change.html``` - Change Password template
     - ```apology.html``` - Display error template
-- `application.py` - 
 - `project.db` - SQLite database storing all data within this project.
 - `README.md` - Describes this project.
 - `requirements.txt` - Installed Python packages. 
