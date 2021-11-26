@@ -6,7 +6,7 @@ HarvardX is an online learning initiative by *Harvard University* through [edX](
 
 1. **Final Project - Time Planner Website**  
 **Description:** A time planner application designed to help users efficiently and effectively schedule days or weeks ahead. Users will be able to register, login, customize weekly schedule (add, edit, delete), add special events, modify to-do list, and of course, logout.  
-**Note:* Since this is my Final Project of CS50X, I am allowed to include this project in my public repository. You may view my project source code [here](cs50/flask/mastertime).  
+**Note:* Since this is my Final Project of CS50X, I am allowed to include this project in my public repository. You may view my project source code [here](https://github.com/jiayong1008/harvardx/tree/cs50/flask/mastertime).  
 :point_right: **[YouTube Demonstaration](https://youtu.be/g4tgSTU_juY)**  
 
 
@@ -37,7 +37,7 @@ HarvardX is an online learning initiative by *Harvard University* through [edX](
 
 7. **Final Project**  
 **Description:** Trip planner website for planning trips to specific country in advance.  
-**Note:* Since this is my Final Project of CS50X, I am allowed to include this project in my public repository. You may view my project source code [here](web50/django/travel). 
+**Note:* Since this is my Final Project of CS50X, I am allowed to include this project in my public repository. You may view my project source code [here](https://github.com/jiayong1008/harvardx/tree/web50/django/travel).  
 :point_right: **[YouTube Demonstaration](https://youtu.be/OJsivDDIMGQ)**   
 
 
