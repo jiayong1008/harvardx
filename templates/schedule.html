@@ -111,7 +111,7 @@
                        <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#edit{{ schedule["index"] }}">Edit</button>
 
                         <!--MODAL-->
-                        <div class="modal fade" id="edit{{ schedule["index"] }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal fade" id="edit{{ schedule['index'] }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                           <div class="modal-dialog">
                             <div class="modal-content">
                               <div class="modal-header">
@@ -122,16 +122,16 @@
                               </div>
                               
                               <div class="modal-body w-100">
-                                <form class="needs-validation" novalidate action="/edit" method="POST" onsubmit="editTime({{ schedule["index"] }});">
+                                <form class="needs-validation" novalidate action="/edit" method="POST" onsubmit="editTime({{ schedule['index'] }});">
                                   
                                   <!--FOR UPDATING DATA IN BACKEND-->
-                                  <input type="hidden" name="day" value="{{ schedule["day"] }}">
-                                  <input type="hidden" name="start" value="{{ schedule["start"] }}">
-                                  <input type="hidden" name="end" value="{{ schedule["end"] }}">
-                                  <input type="hidden" name="title" value="{{ schedule["title"] }}">
+                                  <input type="hidden" name="day" value="{{ schedule['day'] }}">
+                                  <input type="hidden" name="start" value="{{ schedule['start'] }}">
+                                  <input type="hidden" name="end" value="{{ schedule['end'] }}">
+                                  <input type="hidden" name="title" value="{{ schedule['title'] }}">
                                   
                                   <div class="form-group">
-                                    <input autocomplete="off" autofocus class="form-control w-100" name="newtitle" placeholder="Title" type="text" value="{{ schedule["title"] }}" required>
+                                    <input autocomplete="off" autofocus class="form-control w-100" name="newtitle" placeholder="Title" type="text" value="{{ schedule['title'] }}" required>
                                     <div class="valid-feedback">Looks good!</div>
                                     <div class="invalid-feedback">Please insert title of schedule.</div>
                                   </div>
@@ -210,5 +210,4 @@
         })();
         
     </script>
-    
 {% endblock %}

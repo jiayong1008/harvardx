@@ -1,21 +1,38 @@
-This web application is known as 'MasterTime' which is a time planner for anyone who needs help or guidance 
-in planning their time. 
+# MasterTime
+A time planner application designed to help users efficiently and effectively schedule days or weeks ahead. Users will be able to register, login, customize weekly schedule (add, edit, delete), add special events, modify to-do list, and of course, logout.
 
-You will be able to register, login, logout, change your password, modify your weekly schedule table (add, edit, delete),
-modify your special events table, and lastly modify your to-do list within this webpage.
+## Specifications
+This project has been implemented using Python Flask, HTML, CSS, JavaScript, SQLite, and Bootstrap. Laid out as below are the list of specification in this project:
 
-Modification of each table will be available in their respective tabs located in the navigation bar at the top. After
-modification of your table, you should be able to see the updated version of table. 
+- **Registration, Login, Logout:** Users shall be able to register for an account, login, logout, and modify their password if they wish to.
+- **Weekly Schedule:** Signed in users shall be able to plan weekly timetable, where activities within this timetable occurs every week. This can be but not limited to work or school schedule. 
+- **Special Events:** Users can schedule a date for a 'special event' which doesn't quite fit in the weekly schedule. E.g. dental appointment, special meetings, etc.
+- **To-do List:** Users will be able to add multiple tasks, and 'complete' the task once finished.
 
-In short, weekly schedule is a table where you plan your weekly timetable, it can be your work schedule, school schedule, 
-or anything else really. Next, special events table is a table where you can set a date for an event, it can be your 
-appointment, meeting, etc. Lastly, to-do list is where you will be able to add your task and assign a date to which the 
-task should be completed by. You can also press the 'complete' button once you have finished the task and that task will 
-be moved to your 'completed to-do list' table.
+## Files and Directories
+This code consists of a Flask project which has a main app, `application.py`.
 
-The home page is where all your tables, namely weekly schedule, special events, and to-do list table will appear. 
-However, the home page is just for viewing purposes, modifications will have to be done in their respecitve tabs.
+- `application.py` - 
+- `helpers.py` - Contains helper functions used in `application.py`.
+- `static` - Composed of static files.
+    - `javascript.js` - JavaScript for front end.
+    - `styles.css` - Web page stylings.
+- `templates` - Consist of HTML templates for different pages.
+    - ```layout.html``` - Layout template, other templates extends it.
+    - ```index.html``` - Template for Home page
+    - ```login.html``` - Login template
+    - ```register.html``` - Registeration template
+    - ```schedule.html``` - Schedule template
+    - ```todo.html``` - To-do list template
+    - ```events.html``` - Special events template
+    - ```change.html``` - Change Password template
+    - ```apology.html``` - Display error template
+- `application.py` - 
+- `project.db` - SQLite database storing all data within this project.
+- `README.md` - Describes this project.
+- `requirements.txt` - Installed Python packages. 
 
-
-(p.s. I am Lim Jia Yong from Kuala Lumpur, Malaysia, and I would like to thank all the CS50 staffs for putting so much 
-efforts in teaching this, I've learned lots from them and I'm really grateful for it. Thank you so much. :D)
+## Installation
+1. Run `pip install -r requirements.txt` to install all project dependencies.
+2. Execute `export FLASK_APP=application` (use `set` instead of `export` for Windows).
+3. Run `flask run` to startup the Flask server.

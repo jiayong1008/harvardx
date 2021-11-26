@@ -1,0 +1,13 @@
+cachelib==0.4.1
+click==8.0.3
+cs50==7.0.2
+Flask==2.0.2
+Flask-Session==0.4.0
+greenlet==1.1.2
+itsdangerous==2.0.1
+Jinja2==3.0.3
+MarkupSafe==2.0.1
+SQLAlchemy==1.4.27
+sqlparse==0.4.2
+termcolor==1.1.0
+Werkzeug==2.0.2

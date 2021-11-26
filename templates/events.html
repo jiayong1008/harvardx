@@ -73,8 +73,8 @@
                       <form action="/delete" method="post" onsubmit="delRowEvent();">
                         <!--FOR UPDATING DATA IN BACKEND-->
                         <input type="hidden" name="event" value="event">
-                        <input type="hidden" name="date" value="{{ event["date"] }}">
-                        <input type="hidden" name="title" value="{{ event["title"] }}">
+                        <input type="hidden" name="date" value="{{ event['date'] }}">
+                        <input type="hidden" name="title" value="{{ event['title'] }}">
                         <button type="submit" class="btn btn-info">Delete</button>
                       </form>
                     </td>
