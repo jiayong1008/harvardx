@@ -19,7 +19,7 @@ HarvardX is an online learning initiative by *Harvard University* through [edX](
 **Description:** A Wikipedia-like online encyclopedia.  
 :point_right: **[YouTube Demonstaration](https://youtu.be/eK6yrk8TzMY)**    
 
-3. **Wiki**  
+3. **Commerce**  
 **Description:** An eBay-like e-commerce auction site that will allow users to post auction listings, place bids on listings, comment on those listings, and add listings to a “watchlist.”  
 :point_right: **[YouTube Demonstaration](https://youtu.be/E_M243i3qws)**    
 
